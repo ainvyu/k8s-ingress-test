@@ -23,7 +23,7 @@ USERDATA
 
 resource "aws_launch_configuration" "eks_node" {
   name_prefix = "${var.name}-eks-node-"
-  #spot_price = "${var.node_spot_price}"
+  spot_price = "${var.node_spot_price}"
   associate_public_ip_address = true
   iam_instance_profile = "${aws_iam_instance_profile.eks_node.name}"
   image_id = "${data.aws_ami.eks_worker.id}"
@@ -47,7 +47,10 @@ resource "aws_autoscaling_group" "eks_node" {
 
   vpc_zone_identifier = ["${var.vpc_zone_identifier}"]
 
-  target_group_arns = ["${aws_lb_target_group.k8s_cluster.arn}"]
+  target_group_arns = [
+    "${aws_lb_target_group.k8s_cluster_http.arn}",
+    "${aws_lb_target_group.k8s_cluster_https.arn}"
+  ]
 
   tag {
     key = "Name"

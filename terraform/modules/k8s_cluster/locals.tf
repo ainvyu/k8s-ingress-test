@@ -19,10 +19,11 @@ users:
   user:
     exec:
       apiVersion: client.authentication.k8s.io/v1alpha1
-      command: aws-iam-authenticator
+      command: aws
       args:
-        - "token"
-        - "-i"
+        - "eks"
+        - "get-token"
+        - "--cluster-name"
         - "${var.cluster_name}"
 KUBECONFIG
 }
@@ -44,14 +45,4 @@ data:
         - system:bootstrappers
         - system:nodes
 CONFIGMAPAWSAUTH
-}
-
-################################################################################
-# DB Config
-locals {
-  rds_engine = "postgres"
-}
-
-locals {
-  node_port = 30000
 }

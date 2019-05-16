@@ -37,26 +37,53 @@ resource "aws_security_group" "this_lb" {
   tags = "${merge(map("Name", format("%s-ecs-lb-sg", var.name)), var.tags)}"
 }
 
-resource "aws_lb_listener" "k8s_cluster" {
+resource "aws_lb_listener" "k8s_cluster_http" {
   load_balancer_arn = "${aws_lb.k8s_cluster_endpoint.arn}"
-  port = "443"
+  port = "${var.listen_port_http}"
   protocol = "TCP"
 
   "default_action" {
     type = "forward"
-    target_group_arn = "${aws_lb_target_group.k8s_cluster.arn}"
+    target_group_arn = "${aws_lb_target_group.k8s_cluster_http.arn}"
   }
 }
 
-resource "aws_lb_target_group" "k8s_cluster" {
-  name     = "${var.name}-lb-tg"
-  port     = "${local.node_port}"
+resource "aws_lb_listener" "k8s_cluster_https" {
+  load_balancer_arn = "${aws_lb.k8s_cluster_endpoint.arn}"
+  port = "${var.listen_port_https}"
+  protocol = "TCP"
+
+  "default_action" {
+    type = "forward"
+    target_group_arn = "${aws_lb_target_group.k8s_cluster_https.arn}"
+  }
+}
+
+resource "aws_lb_target_group" "k8s_cluster_http" {
+  name     = "${var.name}-http-lb-tg"
+  port     = "${var.node_port_http}"
   protocol = "TCP"
   vpc_id   = "${var.vpc_id}"
 
   health_check {
     protocol = "TCP"
-    port = "${local.node_port}"
+    port = "${var.node_port_http}"
+
+    healthy_threshold = 3
+    unhealthy_threshold = 3
+    interval = 10
+  }
+}
+
+resource "aws_lb_target_group" "k8s_cluster_https" {
+  name     = "${var.name}-https-lb-tg"
+  port     = "${var.node_port_https}"
+  protocol = "TCP"
+  vpc_id   = "${var.vpc_id}"
+
+  health_check {
+    protocol = "TCP"
+    port = "${var.node_port_https}"
 
     healthy_threshold = 3
     unhealthy_threshold = 3

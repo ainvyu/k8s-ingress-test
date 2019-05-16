@@ -1,1 +1,15 @@
-# Created by .ignore support plugin (hsz.mobi)
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+
+# Terraform
+.terraform
+*.tfstate
+*.tfstate.backup
+terraform/keypair
+terraform/k8s_artifacts
+
+# direnv dotfiles
+.envrc
