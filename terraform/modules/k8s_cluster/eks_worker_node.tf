@@ -47,11 +47,6 @@ resource "aws_autoscaling_group" "eks_node" {
 
   vpc_zone_identifier = ["${var.vpc_zone_identifier}"]
 
-  target_group_arns = [
-    "${aws_lb_target_group.k8s_cluster_http.arn}",
-    "${aws_lb_target_group.k8s_cluster_https.arn}"
-  ]
-
   tag {
     key = "Name"
     value = "${var.name}-eks-node-asg"

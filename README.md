@@ -11,8 +11,6 @@
 
     $ export AWS_PROFILE=YOUR_AWS_PROFILE
     $ export AWS_DEFAULT_REGION=YOUR_AWS_REGION
-    $ export TF_VAR_listen_port_http=80
-    $ export TF_VAR_listen_port_https=443
     $ export TF_VAR_region_name=YOUR_AWS_REGION
     $ terraform init
     $ terraform apply

@@ -49,28 +49,3 @@ resource "aws_security_group_rule" "cluster_ingress_node_https" {
   security_group_id        = "${aws_security_group.cluster.id}"
   source_security_group_id = "${aws_security_group.node.id}"
 }
-
-################################################################################
-# LB access to ingress bridge Service Listen Port
-resource "aws_security_group_rule" "node_ingress_node_access_bridge_port_via_http" {
-  type                     = "ingress"
-  description              = "Allow LB traffic"
-  protocol                 = "tcp"
-  from_port                = "${var.listen_port_http}"
-  to_port                  = "${var.listen_port_http}"
-  source_security_group_id = "${aws_security_group.this_lb.id}"
-  security_group_id        = "${aws_security_group.node.id}"
-}
-
-################################################################################
-# LB access to ingress bridge Service Listen Port
-resource "aws_security_group_rule" "node_ingress_node_access_bridge_port_via_https" {
-  type                     = "ingress"
-  description              = "Allow LB traffic"
-  protocol                 = "tcp"
-  from_port                = "${var.listen_port_https}"
-  to_port                  = "${var.listen_port_https}"
-  source_security_group_id = "${aws_security_group.this_lb.id}"
-  security_group_id        = "${aws_security_group.node.id}"
-}
-

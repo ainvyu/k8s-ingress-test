@@ -18,12 +18,6 @@ module "test_cluster" {
   node_instance_type = "${var.eks_node_instance_type}"
   node_spot_price = "${var.eks_node_instance_spot_price}"
 
-  listen_port_http = "${var.listen_port_http}"
-  listen_port_https = "${var.listen_port_https}"
-
-  node_port_http = "${var.node_port_http}"
-  node_port_https = "${var.node_port_https}"
-
   autoscale_min_size = "${var.eks_node_autoscale_min}"
   autoscale_max_size = "${var.eks_node_autoscale_max}"
   autoscale_desired_capacity = "${var.eks_node_autoscale_desired}"
