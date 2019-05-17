@@ -5,8 +5,8 @@
 replicaCount: 1
 
 image:
-  repository: nginx
-  tag: stable
+  repository: hashicorp/http-echo
+  tag: latest
   pullPolicy: IfNotPresent
 
 nameOverride: ""
@@ -17,13 +17,19 @@ service:
   port: 80
 
 ingress:
-  enabled: false
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+  enabled: true
+  annotations:
+     kubernetes.io/ingress.class: nginx
+     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+     nginx.ingress.kubernetes.io/rewrite-target: /
   hosts:
-    - host: chart-example.local
-      paths: []
+    - paths:
+      - path: '/1'
+        serviceName: ingress-demo-1
+        servicePort: 80
+      - path: '/2'
+        serviceName: ingress-demo-2
+        servicePort: 80
 
   tls: []
   #  - secretName: chart-example-tls

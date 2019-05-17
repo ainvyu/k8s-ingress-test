@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "ingress-demo.fullname" . }}
+  name: {{ include "ingress-demo.fullname" . }}-1
   labels:
-    app.kubernetes.io/name: {{ include "ingress-demo.name" . }}
+    app.kubernetes.io/name: {{ include "ingress-demo.name" . }}-1
     helm.sh/chart: {{ include "ingress-demo.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
@@ -15,5 +15,25 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app.kubernetes.io/name: {{ include "ingress-demo.name" . }}
+    app.kubernetes.io/name: {{ include "ingress-demo.name" . }}-1
+    app.kubernetes.io/instance: {{ .Release.Name }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "ingress-demo.fullname" . }}-2
+  labels:
+    app.kubernetes.io/name: {{ include "ingress-demo.name" . }}-2
+    helm.sh/chart: {{ include "ingress-demo.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ include "ingress-demo.name" . }}-2
     app.kubernetes.io/instance: {{ .Release.Name }}

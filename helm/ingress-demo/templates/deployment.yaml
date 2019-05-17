@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "ingress-demo.fullname" . }}
+  name: {{ include "ingress-demo.fullname" . }}-1
   labels:
-    app.kubernetes.io/name: {{ include "ingress-demo.name" . }}
+    app.kubernetes.io/name: {{ include "ingress-demo.name" . }}-1
     helm.sh/chart: {{ include "ingress-demo.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
@@ -11,18 +11,21 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "ingress-demo.name" . }}
+      app.kubernetes.io/name: {{ include "ingress-demo.name" . }}-1
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "ingress-demo.name" . }}
+        app.kubernetes.io/name: {{ include "ingress-demo.name" . }}-1
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ .Chart.Name }}
+        - name: helloworld-1
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - '-listen=:80'
+            - '-text="Hello World 1"'
           ports:
             - name: http
               containerPort: 80
@@ -49,3 +52,58 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ingress-demo.fullname" . }}-2
+  labels:
+    app.kubernetes.io/name: {{ include "ingress-demo.name" . }}-2
+    helm.sh/chart: {{ include "ingress-demo.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "ingress-demo.name" . }}-2
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "ingress-demo.name" . }}-2
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: helloworld-2
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - '-listen=:80'
+            - '-text="Hello World 2"'
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+            {{- with .Values.nodeSelector }}
+      nodeSelector:
+            {{- toYaml . | nindent 8 }}
+            {{- end }}
+            {{- with .Values.affinity }}
+      affinity:
+            {{- toYaml . | nindent 8 }}
+            {{- end }}
+            {{- with .Values.tolerations }}
+      tolerations:
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
