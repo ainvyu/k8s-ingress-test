@@ -23,9 +23,3 @@ variable "eks_node_instance_type" {
 variable "eks_node_instance_spot_price" {
   default = "0.05"
 }
-
-variable "listen_port_http" {}
-variable "listen_port_https" {}
-
-variable "node_port_http" {}
-variable "node_port_https" {}
