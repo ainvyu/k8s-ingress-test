@@ -55,7 +55,7 @@
     kube2iam-dqpnz   1/1       Running   0          20s
     kube2iam-g246v   1/1       Running   0          20s
 
-## Install Pods
+## Install Kubernetes Resources
 
     # Create a namespace for your ingress resources
     $ kubectl create namespace ingress-test
