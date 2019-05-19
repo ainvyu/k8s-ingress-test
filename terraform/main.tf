@@ -2,6 +2,8 @@ provider "aws" {
 
 }
 
+data "aws_region" "current_region" {}
+
 module "test_cluster" {
   source = "modules/k8s_cluster"
 

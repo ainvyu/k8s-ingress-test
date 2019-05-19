@@ -1,13 +1,19 @@
+data "aws_availability_zones" "available" {}
+
+locals {
+  cidr = "10.11.0.0/16"
+}
+
 module "test_vpc" {
   source = "terraform-aws-modules/vpc/aws"
-  version = "1.50.0"
+  version = "1.64.0"
 
   name = "${local.name}-vpc"
-  cidr = "10.11.0.0/16"
+  cidr = "${local.cidr}"
 
-  azs             = ["${var.region_name}a", "${var.region_name}c"]
-  private_subnets = ["10.11.111.0/24", "10.11.112.0/24"]
-  public_subnets  = ["10.11.151.0/24", "10.11.152.0/24"]
+  azs             = ["${slice(data.aws_availability_zones.available.names, 0, 2)}"]
+  private_subnets = ["${cidrsubnet(local.cidr, 8, 100)}", "${cidrsubnet(local.cidr, 8, 101)}"]
+  public_subnets  = ["${cidrsubnet(local.cidr, 8, 105)}", "${cidrsubnet(local.cidr, 8, 106)}"]
 
   enable_dns_hostnames = true
   enable_dns_support = true
@@ -22,4 +28,3 @@ module "test_vpc" {
     "kubernetes.io/cluster/${local.cluster_name}", "shared"
   )}"
 }
-
