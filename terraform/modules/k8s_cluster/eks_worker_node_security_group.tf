@@ -11,10 +11,10 @@ resource "aws_security_group" "node" {
   }
 
   tags = "${
-    map(
+    merge(map(
      "Name", "${var.name}-cluster-eks-node",
      "kubernetes.io/cluster/${var.cluster_name}", "owned"
-    )
+    ), var.tags)
   }"
 }
 

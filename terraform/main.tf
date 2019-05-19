@@ -23,4 +23,6 @@ module "test_cluster" {
   autoscale_min_size = "${var.eks_node_autoscale_min}"
   autoscale_max_size = "${var.eks_node_autoscale_max}"
   autoscale_desired_capacity = "${var.eks_node_autoscale_desired}"
+
+  tags = "${local.tags}"
 }

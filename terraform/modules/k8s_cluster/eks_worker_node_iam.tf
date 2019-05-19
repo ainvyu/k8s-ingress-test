@@ -15,6 +15,12 @@ resource "aws_iam_role" "allow_node" {
   ]
 }
 EOF
+
+  tags = "${
+    merge(map(
+      "Name", "${var.name}-cluster-allow-node"
+    ), var.tags)
+  }"
 }
 
 resource "aws_iam_policy" "allow_kube2iam" {

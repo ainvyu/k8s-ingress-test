@@ -10,9 +10,7 @@ resource "aws_security_group" "cluster" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
-    Name = "${var.name}-eks-cluster"
-  }
+  tags = "${merge(map("Name", format("%s", "${var.name}-eks-cluster-sg")), var.tags)}"
 }
 
 # OPTIONAL: Allow inbound traffic from your local workstation external IP
