@@ -11,7 +11,7 @@ module "test_vpc" {
   name = "${local.name}-vpc"
   cidr = "${local.cidr}"
 
-  azs             = ["${slice(data.aws_availability_zones.available.names, 0, 2)}"]
+  azs             = ["${data.aws_availability_zones.available.names[0]}", "${data.aws_availability_zones.available.names[2]}"]
   private_subnets = ["${cidrsubnet(local.cidr, 8, 100)}", "${cidrsubnet(local.cidr, 8, 101)}"]
   public_subnets  = ["${cidrsubnet(local.cidr, 8, 105)}", "${cidrsubnet(local.cidr, 8, 106)}"]
 

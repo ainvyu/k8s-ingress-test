@@ -7,3 +7,7 @@ locals {
     Product = "${local.name}"
   }
 }
+
+locals {
+  test_namespace = "ingress-test"
+}
