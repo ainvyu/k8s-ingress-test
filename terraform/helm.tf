@@ -13,6 +13,29 @@ resource "helm_release" "kube2iam" {
   name = "kube2iam"
   namespace = "kube-system"
 
+  set {
+    name = "rbac.create"
+    value = "true"
+  }
+
+  /*
+  set {
+    name = "extraArgs.base-role-arn"
+    value = "arn:aws:iam::${var.account_number}:role/"
+  }
+
+  set {
+    name = "extraArgs.default-role"
+    value = ""
+  }
+  */
+
+  set {
+    name = "host.iptables"
+    value = "true"
+  }
+  # extraArgs.base-role-arn=arn:aws:iam::0123456789:role/,extraArgs.default-role=kube2iam-default,host.iptables=true
+
   depends_on = ["kubernetes_cluster_role_binding.binding_role_to_tiller"]
 }
 
