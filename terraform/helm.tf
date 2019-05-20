@@ -8,6 +8,8 @@ provider "helm" {
   service_account = "tiller"
 }
 
+data "aws_caller_identity" "current" {}
+
 resource "helm_release" "kube2iam" {
   chart = "stable/kube2iam"
   name = "kube2iam"
@@ -21,14 +23,24 @@ resource "helm_release" "kube2iam" {
   /*
   set {
     name = "extraArgs.base-role-arn"
-    value = "arn:aws:iam::${var.account_number}:role/"
+    value = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/"
   }
 
   set {
     name = "extraArgs.default-role"
-    value = ""
+    value = "${module.test_cluster.node_iam_role_name}"
   }
   */
+
+  set {
+    name = "extraArgs.auto-discover-base-arn"
+    value = ""
+  }
+
+  set {
+    name = "extraArgs.auto-discover-default-role"
+    value = "true"
+  }
 
   set {
     name = "host.iptables"
