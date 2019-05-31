@@ -46,9 +46,30 @@ resource "helm_release" "kube2iam" {
     name = "host.iptables"
     value = "true"
   }
+
+  set {
+    name = "host.interface"
+    value = "eni+"
+  }
   # extraArgs.base-role-arn=arn:aws:iam::0123456789:role/,extraArgs.default-role=kube2iam-default,host.iptables=true
 
   depends_on = ["kubernetes_cluster_role_binding.binding_role_to_tiller"]
+}
+
+resource "helm_release" "heapster" {
+  chart = "stable/heapster"
+  name = "heapster"
+  namespace = "kube-system"
+
+  depends_on = ["kubernetes_cluster_role_binding.binding_role_to_tiller"]
+}
+
+resource "helm_release" "kubernetes-dashboard" {
+  chart = "stable/kubernetes-dashboard"
+  name = "kubernetes-dashboard"
+  namespace = "kube-system"
+
+  depends_on = ["helm_release.heapster"]
 }
 
 resource "helm_release" "nginx_ingress_controller" {
