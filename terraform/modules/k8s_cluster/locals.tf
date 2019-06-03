@@ -48,3 +48,32 @@ data:
         - system:nodes
 CONFIGMAPAWSAUTH
 }
+
+data "aws_region" "current" {}
+
+################################################################################
+# Test Pod
+locals {
+  aws_cli_pod_resource_yaml = <<EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  name: aws-cli
+  labels:
+    name: aws-cli
+  annotations:
+    iam.amazonaws.com/role: ${aws_iam_role.access_s3.arn}
+spec:
+  containers:
+  - image: fstab/aws-cli
+    env:
+      - name: AWS_DEFAULT_REGION
+        value: "${data.aws_region.current.name}"
+    command:
+      - "/home/aws/aws/env/bin/aws"
+      - "s3"
+      - "ls"
+      - "${aws_s3_bucket.test_bucket.bucket}"
+    name: aws-cli
+EOF
+}

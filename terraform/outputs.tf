@@ -19,3 +19,8 @@ resource "local_file" "airflow_eks_config_map_aws_auth_yaml" {
   filename = "k8s_artifacts/config_map_aws_auth.yaml"
   content = "${module.test_cluster.config_map_aws_auth}"
 }
+
+resource "local_file" "aws_cli_pod_yaml" {
+  filename = "k8s_artifacts/aws_cli_pod.yaml"
+  content = "${module.test_cluster.aws_cli_pod}"
+}

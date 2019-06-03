@@ -38,7 +38,13 @@
     "Hello World 1"
     curl $(kubectl get service --namespace=kube-system --output json | jq -r '.items[].status.loadBalancer.ingress[0].hostname' | grep -v null | sort | uniq)/2
     "Hello World 2"
+    
+# Test kube2iam
 
+    $ kubectl apply -f k8s_artifacts/aws_cli_pod.yaml --wait
+    pod/aws-cli created
+    $ kubectl logs aws-cli                                  
+    2019-06-03 09:15:53         11 test.txt
 
 # Troubleshooting
 

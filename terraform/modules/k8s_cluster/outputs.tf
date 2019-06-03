@@ -13,3 +13,7 @@ output "node_iam_role_name" {
 output "node_iam_role_arn" {
   value = "${aws_iam_role.allow_node.arn}"
 }
+
+output "aws_cli_pod" {
+  value = "${local.aws_cli_pod_resource_yaml}"
+}
